@@ -657,6 +657,8 @@ def build_interface():
 
 if __name__ == "__main__":
     build_interface().launch(
+        server_name="0.0.0.0",
+        share=True,
         css="""
         footer {display: none !important;}
         .built-with, .gradio-container .prose a[href*='gradio.app'] {display: none !important;}

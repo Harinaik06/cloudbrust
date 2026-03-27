@@ -11,7 +11,16 @@ Indian Cloudburst & Extreme Rainfall prediction using LSTM neural network on wea
 - Risk levels: High/Moderate/Low Cloudburst probability
 - Gradio UI: Real-time, Date range scan, Single date tabs
 
-Demo: http://127.0.0.1:7860
+**Demo (localhost):** http://127.0.0.1:7860  
+**Demo (network):** http://YOUR-IP:7860 (e.g., http://192.168.1.100:7860)
+
+## 🌐 Network Access
+1. Run `python app.py` (now binds to 0.0.0.0).
+2. Get IP: `ipconfig` → IPv4 Address.
+3. Other devices (same network): Open http://YOUR-IP:7860.
+4. Allow port 7860 in Windows Firewall.
+
+See RUN_GUIDE.md for details.
 
 ## 📊 Model Performance
 - Test Accuracy: 77.5%

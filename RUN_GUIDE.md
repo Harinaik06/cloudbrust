@@ -22,13 +22,23 @@ Outputs:
 - `preprocessor.pkl`
 - `test_metrics.json`
 
-## 3) Run Gradio App
+## 3) Run Gradio App (Localhost Only)
 
 ```powershell
 .\.venv\Scripts\python.exe app.py
 ```
 
-Then open the local URL shown in terminal (for example `http://127.0.0.1:7866`).
+Open `http://127.0.0.1:7860` (localhost).
+
+## 4) Run Gradio App (Network-Accessible)
+
+```powershell
+.\.venv\Scripts\python.exe app.py
+```
+
+1. Terminal shows `http://0.0.0.0:7860` → Find your IPv4: `ipconfig` (look for "IPv4 Address", e.g., 192.168.1.100).
+2. On other laptops (same WiFi): Open `http://192.168.1.100:7860`.
+3. Windows Firewall: Allow Python/port 7860 if blocked.
 
 ## Files for Demo
 
