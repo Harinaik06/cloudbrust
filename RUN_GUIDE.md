@@ -2,6 +2,8 @@
 
 Use these commands from the project folder.
 
+**Always use the virtual environment Python** (`.\.venv\Scripts\python.exe`), not plain `python`. If you run `python app.py` and see `ModuleNotFoundError: No module named 'gradio'`, your system Python does not have the project packages — use the command below instead.
+
 ## 1) Preprocess Dataset
 
 ```powershell

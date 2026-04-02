@@ -16,7 +16,7 @@ DATASET_PATH = Path("weather.csv")
 
 def load_preprocessor():
     if not PREPROCESSOR_PATH.exists():
-        raise FileNotFoundError("Missing preprocessor.pkl. Run train.py first.")
+        raise FileNotFoundError("Missing preprocessor.pkl. Run train_test_lstm.py first.")
 
     with PREPROCESSOR_PATH.open("rb") as f:
         preprocessor = pickle.load(f)
@@ -286,8 +286,11 @@ def predict_by_date(date_str, location):
 
 
 # ── Scan a date range for all predicted cloudbursts ─────────────────
-def scan_range(start_str, end_str):
+def scan_range(start_str, end_str, location):
     try:
+        if location not in LOCATION_DATA:
+            return f"Invalid location: {location}", None
+
         start = pd.to_datetime(start_str, format="%d-%m-%Y")
         end   = pd.to_datetime(end_str,   format="%d-%m-%Y")
 
@@ -379,7 +382,7 @@ def scan_range(start_str, end_str):
         )
 
         clipped_note = (
-            f"\n⚠️ End date clipped to dataset max ({dataset_max.strftime('%d-%m-%Y')}). "
+            f"\nEnd date clipped to dataset max ({dataset_max.strftime('%d-%m-%Y')}). "
             "Use 'Single Date Prediction' for future dates."
         ) if clipped else ""
 
@@ -611,27 +614,29 @@ def build_interface():
                 start_input = gr.Textbox(label="Start Date (DD-MM-YYYY)", placeholder="e.g. 01-01-2025")
                 end_input   = gr.Textbox(label="End Date (DD-MM-YYYY)",   placeholder="e.g. 31-12-2025")
             with gr.Row():
+                location_dropdown = gr.Dropdown(choices=DATASET_LOCATIONS, label="Location", value=DATASET_LOCATIONS[0])
+            with gr.Row():
                 ex_2022_btn = gr.Button("Use Example: 2022 Full Year")
                 ex_2025_btn = gr.Button("Use Example: 2025 Full Year")
             with gr.Row():
                 scan_output = gr.Textbox(label="Cloudburst Dates Found", lines=15)
                 scan_plot = gr.Plot(label="Prediction Confidence Trend")
             scan_btn = gr.Button("Scan for Cloudbursts", variant="primary")
-            scan_btn.click(fn=scan_range, inputs=[start_input, end_input], outputs=[scan_output, scan_plot])
+            scan_btn.click(fn=scan_range, inputs=[start_input, end_input, location_dropdown], outputs=[scan_output, scan_plot])
             ex_2022_btn.click(
-                fn=lambda: set_scan_example("01-01-2022", "31-12-2022"),
+                fn=lambda: (set_scan_example("01-01-2022", "31-12-2022"), DATASET_LOCATIONS[0]),
                 inputs=[],
-                outputs=[start_input, end_input],
+                outputs=[start_input, end_input, location_dropdown],
             )
             ex_2025_btn.click(
-                fn=lambda: set_scan_example("01-01-2025", "31-12-2025"),
+                fn=lambda: (set_scan_example("01-01-2025", "31-12-2025"), DATASET_LOCATIONS[0]),
                 inputs=[],
-                outputs=[start_input, end_input],
+                outputs=[start_input, end_input, location_dropdown],
             )
 
             gr.Examples(
-                examples=[["01-01-2022", "31-12-2022"], ["01-01-2025", "31-12-2025"]],
-                inputs=[start_input, end_input],
+                examples=[["01-01-2022", "31-12-2022", DATASET_LOCATIONS[0]], ["01-01-2025", "31-12-2025", DATASET_LOCATIONS[0]]],
+                inputs=[start_input, end_input, location_dropdown],
             )
 
         with gr.Tab("Single Date Prediction"):
@@ -657,7 +662,6 @@ def build_interface():
 
 if __name__ == "__main__":
     build_interface().launch(
-        server_name="0.0.0.0",
         share=True,
         css="""
         footer {display: none !important;}
