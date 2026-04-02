@@ -1,7 +1,7 @@
-# Weather Prediction LSTM App
+# Cloudbrust Weather Prediction LSTM App
 
 ## Overview
-This project is a machine learning application for weather prediction using an LSTM (Long Short-Term Memory) neural network. It includes data preprocessing, model training/testing, and a web interface for predictions.
+Cloudbrust is a weather prediction app powered by LSTM neural network. Features data preprocessing, model training, testing, and Gradio web interface.
 
 ## Files
 - `app.py`: Gradio web app for weather predictions.
